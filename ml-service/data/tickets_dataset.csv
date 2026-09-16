@@ -1,0 +1,169 @@
+text,category,priority
+"Unable to connect to office Wi-Fi network in Block B",Network,HIGH
+"Laptop screen flickering and turns completely black",Hardware,HIGH
+"Password reset requested for internal portal account",Access/Login,LOW
+"Outlook application crashing continuously when sending emails",Software,MEDIUM
+"Cannot send or receive emails from corporate email client",Email,HIGH
+"Paper jam in main department laser printer on 3rd floor",Printer,LOW
+"Database query timing out on sales analytics database cluster",Database,CRITICAL
+"Suspicious phishing email received with suspicious link",Security,CRITICAL
+"Need software installation permission for VS Code development tool",Software,LOW
+"VPN connection dropping randomly during remote work",Network,HIGH
+"Monitor power button not responding and display is dead",Hardware,LOW
+"Mouse double-clicking automatically and scroll wheel faulty",Hardware,LOW
+"Keyboard spacebar stuck and missing two keycaps",Hardware,LOW
+"Blue screen of death BSOD error on startup Windows 11",Software,HIGH
+"Office 365 license expired notification showing in Word and Excel",Software,MEDIUM
+"Cannot connect to company intranet or local network shares",Network,HIGH
+"Entire office network router rebooting repeatedly down for all staff",Network,CRITICAL
+"Slow internet browsing speed on ethernet connection",Network,LOW
+"Wi-Fi authentication rejected invalid credentials error",Access/Login,MEDIUM
+"Account locked after entering wrong password three times",Access/Login,LOW
+"Need access permission to shared HR Google Drive folder",Access/Login,MEDIUM
+"Two-factor authentication 2FA code not received on mobile phone",Access/Login,HIGH
+"Single sign-on SSO failing for Salesforce integration",Access/Login,HIGH
+"Malware warning popups appearing on browser screen",Security,CRITICAL
+"Unusual login attempt alert detected from unknown IP address",Security,CRITICAL
+"Ransomware threat message displayed on computer screen",Security,CRITICAL
+"USB port disabled need permission for external hard drive",Security,MEDIUM
+"Firewall blocking outgoing connection to staging server",Security,HIGH
+"Printer out of toner cartridge replacement needed in HR section",Printer,LOW
+"Network printer offline error across entire finance department",Printer,MEDIUM
+"Printer spooler service stopping automatically on Windows 10",Printer,MEDIUM
+"Barcode printer printing blank labels in logistics warehouse",Printer,HIGH
+"MySQL connection pool exhausted error in production app",Database,CRITICAL
+"Database replication delay spike between primary and replica node",Database,CRITICAL
+"PostgreSQL database disk space 95% full clean up required",Database,HIGH
+"Slow database response on customer portal search query",Database,MEDIUM
+"Requesting database backup dump for quarterly compliance audit",Database,LOW
+"Request new ergonomic mouse and keyboard set",Hardware,LOW
+"Dual monitor desktop setup assistance required in conference room",Hardware,LOW
+"Laptop battery draining within 30 minutes of full charge",Hardware,MEDIUM
+"Hard disk noise clicking sound computer failing to boot",Hardware,HIGH
+"Docking station HDMI port not detecting external screen",Hardware,MEDIUM
+"RAM upgrade requested from 8GB to 16GB for developer laptop",Hardware,LOW
+"Teams audio and video lagging heavily during meetings",Software,MEDIUM
+"Docker container failing to start due to port binding issue",Software,MEDIUM
+"Git commit failing SSH key authentication error",Software,MEDIUM
+"IntelliJ IDEA license activation key expired",Software,LOW
+"PDF editor crashing when opening large scanned document",Software,LOW
+"Accounting software throwing runtime exception on invoice print",Software,HIGH
+"SAP ERP client disconnects every 10 minutes",Software,HIGH
+"Port 8080 blocked on firewall need opening for testing",Network,MEDIUM
+"DNS resolution failing for domain api.company.internal",Network,HIGH
+"Fiber optic network cable cut in server room no connectivity",Network,CRITICAL
+"Core switch hardware failure entire floor network offline",Network,CRITICAL
+"VoIP phone line no dial tone in customer support desk",Network,HIGH
+"Email inbox storage limit full 99% capacity reached",Email,MEDIUM
+"Email attachment size limit exceeded error when sending ZIP",Email,LOW
+"Spam emails flooding inbox despite junk mail filter",Email,MEDIUM
+"Email signature update requested for rebranded company division",Email,LOW
+"Auto-responder out of office reply not working for external domain",Email,LOW
+"Shared mailbox access requested for support team members",Access/Login,MEDIUM
+"Active Directory account disabled by administrator",Access/Login,HIGH
+"Biometric attendance scanner not recognizing fingerprint",Access/Login,MEDIUM
+"New employee onboard request create domain account and email",Access/Login,MEDIUM
+"Offboarding employee account revocation request immediate action",Access/Login,HIGH
+"Database index corrupt causing transaction rollback failure",Database,CRITICAL
+"SQL Server high CPU utilization at 100% causing slow web portal",Database,HIGH
+"Database connection timeout on web application background worker",Database,HIGH
+"Printers on 4th floor refusing print jobs from Mac workstations",Printer,MEDIUM
+"Color printer prints wrong colors yellow tint on documents",Printer,LOW
+"Scanner feeder pulling multiple pages simultaneously",Printer,LOW
+"Security certificate SSL expired on enterprise portal website",Security,CRITICAL
+"Unauthorized access attempt logged on admin dashboard",Security,CRITICAL
+"Antivirus software definitions out of date system unprotected",Security,HIGH
+"Data leak protection DLP blocked sending report to client",Security,HIGH
+"Lost company phone needs remote wipe immediately",Security,CRITICAL
+"External display showing no signal on ceiling projector",Hardware,LOW
+"Server chassis fan loud noise overheating warning logged",Hardware,HIGH
+"Headset microphone not recording voice in web browser call",Hardware,LOW
+"Uninterruptible power supply UPS battery alarm buzzing in rack",Hardware,CRITICAL
+"Application crash dump generated on enterprise portal load",Software,MEDIUM
+"Web server returning 502 Bad Gateway error to external users",Software,CRITICAL
+"REST API returning 500 Internal Server Error on login endpoint",Software,CRITICAL
+"Chrome browser extension blocking company portal script",Software,LOW
+"File server shared folder SMB protocol permissions error",Network,MEDIUM
+"Wireless access point AP in cafeteria flashing red light",Network,MEDIUM
+"Bandwidth saturation during file backup causing latency",Network,MEDIUM
+"Email delay of 2 hours for messages coming from external clients",Email,HIGH
+"DKIM and SPF verification failing for domain email headers",Email,HIGH
+"Email encryption key setup for sensitive financial documents",Email,MEDIUM
+"Admin password rotation required for quarterly security policy",Access/Login,LOW
+"Privileged access request for production Kubernetes cluster",Access/Login,HIGH
+"Database migration script failing on foreign key constraint",Database,HIGH
+"Read replica lag causing stale data shown on reporting portal",Database,MEDIUM
+"3D printer nozzle clogged failure to print prototype",Printer,LOW
+"Suspicious ransomware executable downloaded in downloads folder",Security,CRITICAL
+"Security scan flagged open port 22 SSH on public IP address",Security,HIGH
+"System mouse cursor erratic moving on screen",Hardware,LOW
+"Laptop webcam covered or not detected by video call app",Hardware,LOW
+"Blue screen memory management fault error code 0x0000001A",Software,HIGH
+"Wi-Fi SSID network name invisible on mobile devices",Network,MEDIUM
+"Cannot send email with PDF attachments to government portal",Email,MEDIUM
+"Password expired popup loop cannot enter new password",Access/Login,HIGH
+"Database transaction log file filled drive partition C",Database,CRITICAL
+"Thermal printer label paper sensor misaligned",Printer,LOW
+"Trojan virus detected by Windows Defender on workstation",Security,CRITICAL
+"Desktop computer won't turn on no power LED indicator",Hardware,HIGH
+"Monitor flickering when refresh rate is set to 60Hz",Hardware,LOW
+"Bluetooth speaker setup in main boardroom room 402",Hardware,LOW
+"Excel workbook frozen when calculating large macro sheet",Software,LOW
+"Node.js build command failing npm error ENOSPC no space left",Software,MEDIUM
+"Nginx web server process crashed in production server 01",Software,CRITICAL
+"Network switch port flapping causing packet loss on workstation",Network,HIGH
+"Public IP blacklisted on spamhaus spam database",Network,HIGH
+"Mailbox migration to Cloud failed for user account",Email,MEDIUM
+"Email forwarding rule auto-redirecting to external address",Security,CRITICAL
+"Role permissions missing to create new project in Jira",Access/Login,LOW
+"MongoDB connection refused error on port 27017",Database,HIGH
+"Multi-function printer printing garbled symbols paper waste",Printer,LOW
+"Security alert port scanning detected from internal IP address",Security,CRITICAL
+"Headset audio crackling during customer phone calls",Hardware,LOW
+"Python script throwing IndentationError on production job",Software,LOW
+"Wi-Fi router in conference room B overheating and turning off",Network,HIGH
+"Email auto-archiving corrupted PST mailbox file",Email,MEDIUM
+"FTP server access request for vendor file delivery",Access/Login,LOW
+"Database query deadlock killed transaction in billing module",Database,HIGH
+"Paper scanner driver incompatible with Windows 11 update",Printer,LOW
+"Port 443 HTTPS blocked by firewall policy change",Security,CRITICAL
+"Keyboard typing incorrect characters layout set to French",Hardware,LOW
+"VS Code extension host terminated unexpectedly",Software,LOW
+"Core router BGP session down network outage in region east",Network,CRITICAL
+"Email signature image logo broken link showing red cross",Email,LOW
+"User locked out of workstation Windows Hello PIN failure",Access/Login,MEDIUM
+"Database table locked indefinitely during ALTER TABLE script",Database,CRITICAL
+"Plotter printer paper roll empty in design department",Printer,LOW
+"Credential dumping attack detected on server host 04",Security,CRITICAL
+"Laptop fan spinning at maximum speed constantly high heat",Hardware,MEDIUM
+"Java runtime out of memory java.lang.OutOfMemoryError Heap",Software,HIGH
+"Domain Name Server DNS cache poisoning suspected on subnet",Network,CRITICAL
+"Email bounce back message user mailbox does not exist",Email,LOW
+"Reset expired domain password via self-service portal broken",Access/Login,HIGH
+"Database connection leak causing pool timeout exceptions",Database,CRITICAL
+"Multi-function printer scanner to email function failing SMTP",Printer,MEDIUM
+"Phishing simulation clicked by user security training required",Security,LOW
+"Laptop power adapter cable frayed wire exposed hazardous",Hardware,HIGH
+"Docker daemon not responding restart docker service",Software,MEDIUM
+"Subnet mask mismatch preventing ping between dev servers",Network,MEDIUM
+"Email disclaimers mandatory footer missing on outbound mail",Email,LOW
+"SSH access denied public key not authorized on jump server",Access/Login,MEDIUM
+"Database backup restore verification failed checksum mismatch",Database,CRITICAL
+"Wireless printer disconnects whenever router reboots",Printer,LOW
+"SQL injection attack pattern detected by Web Application Firewall",Security,CRITICAL
+"Computer graphics card driver crash screen flickers",Hardware,MEDIUM
+"Postman API client hanging on SSL certificate verification",Software,LOW
+"Local area network LAN cable clip broken connection loose",Network,LOW
+"Email spam filter false positive blocking customer invoices",Email,HIGH
+"Two-factor authenticator app uninstalled need QR code reset",Access/Login,MEDIUM
+"PostgreSQL database query execution plan degraded rebuild index",Database,MEDIUM
+"Thermal label printer printing too faint barcode unreadable",Printer,LOW
+"Ransomware honeypot file triggered isolation protocol",Security,CRITICAL
+"Dual monitor display order swapped left is right",Hardware,LOW
+"Visual Studio build error MSB3073 exited with code 1",Software,LOW
+"Wi-Fi speed throttled below 1 Mbps on guest network",Network,LOW
+"Email distribution group missing new team members list",Email,LOW
+"SAML authentication assertion failed for Okta login",Access/Login,HIGH
+"Database cluster node split-brain state resolved data check",Database,CRITICAL
+"Card printer ribbon broken cannot print employee ID badges",Printer,LOW
+"Zero-day vulnerability patch deployment required immediately",Security,CRITICAL

@@ -1,0 +1,54 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start ML Service",
+            "type": "shell",
+            "command": "python -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload",
+            "options": {
+                "cwd": "${workspaceFolder}/ml-service"
+            },
+            "presentation": {
+                "group": "services",
+                "panel": "dedicated"
+            },
+            "isBackground": true
+        },
+        {
+            "label": "Start Backend",
+            "type": "shell",
+            "command": ".\\mvnw spring-boot:run",
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "presentation": {
+                "group": "services",
+                "panel": "dedicated"
+            },
+            "isBackground": true
+        },
+        {
+            "label": "Start Frontend",
+            "type": "shell",
+            "command": "npm run dev",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "presentation": {
+                "group": "services",
+                "panel": "dedicated"
+            },
+            "isBackground": true
+        },
+        {
+            "label": "Run All Services",
+            "dependsOn": [
+                "Start ML Service",
+                "Start Backend",
+                "Start Frontend"
+            ],
+            "dependsOrder": "parallel",
+            "problemMatcher": []
+        }
+    ]
+}

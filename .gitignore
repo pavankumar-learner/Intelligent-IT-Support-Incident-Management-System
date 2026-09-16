@@ -1,0 +1,20 @@
+# Python local environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Java/Maven build output
+backend/target/
+
+# Node/Vite dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Local environment and editor noise
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
