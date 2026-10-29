@@ -31,6 +31,7 @@ ChartJS.register(
 const SupportDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchStats();
@@ -39,17 +40,35 @@ const SupportDashboard = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
+      setError('');
       const res = await getDashboardStatsApi();
       setStats(res.data);
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
+      setError('Unable to load IT support analytics from the server. Please verify backend connection.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading || !stats) {
+  if (loading) {
     return <div className="text-center py-20 text-slate-400">Loading Support Desk Analytics...</div>;
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="p-8 text-center space-y-4">
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm max-w-lg mx-auto">
+          {error || 'No analytics data available.'}
+        </div>
+        <button
+          onClick={fetchStats}
+          className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition"
+        >
+          Retry Loading Analytics
+        </button>
+      </div>
+    );
   }
 
   // Chart 1: Category Distribution

@@ -3,12 +3,14 @@ import { getIncidentsApi, getAgentsApi, assignAgentApi, updateStatusApi, updateP
 import StatusBadge from '../components/StatusBadge';
 import PriorityBadge from '../components/PriorityBadge';
 import TicketDetailsPage from './TicketDetailsPage';
-import { Search, Filter, Headphones, UserCheck, ShieldAlert, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Filter, Headphones, UserCheck, ShieldAlert, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const IncidentManagementPage = () => {
   const [incidents, setIncidents] = useState([]);
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [feedback, setFeedback] = useState({ text: '', type: '' });
   const [selectedIncidentId, setSelectedIncidentId] = useState(null);
 
   const [search, setSearch] = useState('');
@@ -28,6 +30,9 @@ const IncidentManagementPage = () => {
   const [newPriority, setNewPriority] = useState('HIGH');
   const [priorityComment, setPriorityComment] = useState('');
 
+  const [modalError, setModalError] = useState('');
+  const [modalLoading, setModalLoading] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -35,8 +40,14 @@ const IncidentManagementPage = () => {
     fetchData();
   }, [search, categoryFilter, priorityFilter, statusFilter]);
 
+  const showNotification = (text, type = 'success') => {
+    setFeedback({ text, type });
+    setTimeout(() => setFeedback({ text: '', type: '' }), 4000);
+  };
+
   const fetchData = async () => {
     setLoading(true);
+    setError('');
     try {
       const params = {};
       if (search) params.search = search;
@@ -53,6 +64,7 @@ const IncidentManagementPage = () => {
       setCurrentPage(1);
     } catch (err) {
       console.error('Error fetching support queue data:', err);
+      setError('Unable to load incident queue from server. Please verify backend connection.');
     } finally {
       setLoading(false);
     }
@@ -61,38 +73,53 @@ const IncidentManagementPage = () => {
   const handleAssignSubmit = async (e) => {
     e.preventDefault();
     if (!selectedAgentId || !assignModalIncident) return;
+    setModalLoading(true);
+    setModalError('');
     try {
       await assignAgentApi(assignModalIncident.id, selectedAgentId);
       setAssignModalIncident(null);
+      showNotification(`Ticket ${assignModalIncident.ticketNumber} successfully assigned.`);
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to assign agent');
+      setModalError(err.response?.data?.message || 'Failed to assign agent.');
+    } finally {
+      setModalLoading(false);
     }
   };
 
   const handleStatusSubmit = async (e) => {
     e.preventDefault();
     if (!statusModalIncident) return;
+    setModalLoading(true);
+    setModalError('');
     try {
       await updateStatusApi(statusModalIncident.id, newStatus, statusComment);
       setStatusModalIncident(null);
       setStatusComment('');
+      showNotification(`Status for ${statusModalIncident.ticketNumber} updated to ${newStatus}.`);
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update status');
+      setModalError(err.response?.data?.message || 'Failed to update status.');
+    } finally {
+      setModalLoading(false);
     }
   };
 
   const handlePrioritySubmit = async (e) => {
     e.preventDefault();
     if (!priorityModalIncident) return;
+    setModalLoading(true);
+    setModalError('');
     try {
       await updatePriorityApi(priorityModalIncident.id, newPriority, priorityComment);
       setPriorityModalIncident(null);
       setPriorityComment('');
+      showNotification(`Priority for ${priorityModalIncident.ticketNumber} updated to ${newPriority}.`);
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to override priority');
+      setModalError(err.response?.data?.message || 'Failed to override priority.');
+    } finally {
+      setModalLoading(false);
     }
   };
 
@@ -114,6 +141,37 @@ const IncidentManagementPage = () => {
           Total Queue: <span className="font-bold text-indigo-400">{incidents.length}</span> tickets
         </div>
       </div>
+
+      {/* Notification banner */}
+      {feedback.text && (
+        <div className={`p-4 rounded-xl text-sm flex items-center space-x-2 border ${
+          feedback.type === 'error'
+            ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+            : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+        }`}>
+          {feedback.type === 'error' ? (
+            <AlertCircle className="w-5 h-5 shrink-0" />
+          ) : (
+            <CheckCircle2 className="w-5 h-5 shrink-0" />
+          )}
+          <span>{feedback.text}</span>
+        </div>
+      )}
+
+      {error && (
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="w-5 h-5 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={fetchData}
+            className="text-xs font-semibold px-3 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 transition"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Search & Filters */}
       <div className="glass-panel p-4 rounded-2xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -205,16 +263,22 @@ const IncidentManagementPage = () => {
                     <td className="py-3.5 px-4 text-xs text-slate-300 font-medium">{t.assignedTo ? t.assignedTo.name : <span className="text-amber-400 italic">Unassigned</span>}</td>
                     <td className="py-3.5 px-4 text-right space-x-1">
                       <button
-                        onClick={() => { setAssignModalIncident(t); setSelectedAgentId(t.assignedTo?.id || ''); }}
+                        onClick={() => { setAssignModalIncident(t); setSelectedAgentId(t.assignedTo?.id || ''); setModalError(''); }}
                         className="px-2.5 py-1 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 text-xs font-semibold transition"
                       >
                         Assign
                       </button>
                       <button
-                        onClick={() => { setStatusModalIncident(t); setNewStatus(t.status); }}
+                        onClick={() => { setStatusModalIncident(t); setNewStatus(t.status); setStatusComment(''); setModalError(''); }}
                         className="px-2.5 py-1 rounded bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-semibold transition"
                       >
                         Status
+                      </button>
+                      <button
+                        onClick={() => { setPriorityModalIncident(t); setNewPriority(t.priority); setPriorityComment(''); setModalError(''); }}
+                        className="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/20 text-xs font-semibold transition"
+                      >
+                        Priority
                       </button>
                       <button
                         onClick={() => setSelectedIncidentId(t.id)}
@@ -257,6 +321,12 @@ const IncidentManagementPage = () => {
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4">
             <h3 className="text-lg font-bold text-white">Assign Ticket: {assignModalIncident.ticketNumber}</h3>
+            {modalError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{modalError}</span>
+              </div>
+            )}
             <form onSubmit={handleAssignSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase">Select Support Agent</label>
@@ -275,6 +345,7 @@ const IncidentManagementPage = () => {
               <div className="flex justify-end space-x-3 pt-4 border-t border-slate-800">
                 <button
                   type="button"
+                  disabled={modalLoading}
                   onClick={() => setAssignModalIncident(null)}
                   className="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold"
                 >
@@ -282,9 +353,10 @@ const IncidentManagementPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold"
+                  disabled={modalLoading}
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold disabled:opacity-50"
                 >
-                  Save Assignment
+                  {modalLoading ? 'Saving...' : 'Save Assignment'}
                 </button>
               </div>
             </form>
@@ -297,6 +369,12 @@ const IncidentManagementPage = () => {
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4">
             <h3 className="text-lg font-bold text-white">Update Status: {statusModalIncident.ticketNumber}</h3>
+            {modalError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{modalError}</span>
+              </div>
+            )}
             <form onSubmit={handleStatusSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase">Target Status</label>
@@ -326,6 +404,7 @@ const IncidentManagementPage = () => {
               <div className="flex justify-end space-x-3 pt-4 border-t border-slate-800">
                 <button
                   type="button"
+                  disabled={modalLoading}
                   onClick={() => setStatusModalIncident(null)}
                   className="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold"
                 >
@@ -333,9 +412,67 @@ const IncidentManagementPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold"
+                  disabled={modalLoading}
+                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold disabled:opacity-50"
                 >
-                  Update Status
+                  {modalLoading ? 'Updating...' : 'Update Status'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* OVERRIDE PRIORITY MODAL */}
+      {priorityModalIncident && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4">
+            <h3 className="text-lg font-bold text-white">Override Priority: {priorityModalIncident.ticketNumber}</h3>
+            {modalError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{modalError}</span>
+              </div>
+            )}
+            <form onSubmit={handlePrioritySubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase">Target Priority</label>
+                <select
+                  value={newPriority}
+                  onChange={(e) => setNewPriority(e.target.value)}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+                >
+                  <option value="LOW">LOW</option>
+                  <option value="MEDIUM">MEDIUM</option>
+                  <option value="HIGH">HIGH</option>
+                  <option value="CRITICAL">CRITICAL</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase">Reason for Override</label>
+                <textarea
+                  rows={3}
+                  value={priorityComment}
+                  onChange={(e) => setPriorityComment(e.target.value)}
+                  placeholder="Justification for priority escalation or demotion..."
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end space-x-3 pt-4 border-t border-slate-800">
+                <button
+                  type="button"
+                  disabled={modalLoading}
+                  onClick={() => setPriorityModalIncident(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={modalLoading}
+                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold disabled:opacity-50"
+                >
+                  {modalLoading ? 'Saving...' : 'Override Priority'}
                 </button>
               </div>
             </form>

@@ -4,8 +4,6 @@ import com.example.itsupport.dto.JwtResponse;
 import com.example.itsupport.dto.LoginRequest;
 import com.example.itsupport.dto.RegisterRequest;
 import com.example.itsupport.dto.UserDto;
-import com.example.itsupport.entity.User;
-import com.example.itsupport.repository.UserRepository;
 import com.example.itsupport.security.UserPrincipal;
 import com.example.itsupport.service.AuthService;
 import jakarta.validation.Valid;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -37,7 +34,6 @@ public class AuthController {
         if (currentUser == null) {
             return ResponseEntity.status(401).build();
         }
-        User user = userRepository.findById(currentUser.getId()).orElse(null);
-        return ResponseEntity.ok(UserDto.fromEntity(user));
+        return ResponseEntity.ok(authService.getUserById(currentUser.getId()));
     }
 }

@@ -2,6 +2,7 @@ package com.example.itsupport.controller;
 
 import com.example.itsupport.dto.*;
 import com.example.itsupport.entity.*;
+import com.example.itsupport.exception.ResourceNotFoundException;
 import com.example.itsupport.repository.UserRepository;
 import com.example.itsupport.security.UserPrincipal;
 import com.example.itsupport.service.IncidentService;
@@ -23,7 +24,7 @@ public class IncidentController {
 
     private User getCurrentUserEntity(UserPrincipal userPrincipal) {
         return userRepository.findById(userPrincipal.getId())
-                .orElseThrow(() -> new RuntimeException("Current user not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found in database"));
     }
 
     @PostMapping

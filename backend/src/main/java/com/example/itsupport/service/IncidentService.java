@@ -30,10 +30,6 @@ public class IncidentService {
         User creator = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentUserEmail));
 
-        // Generate Ticket Number (INC-XXXX)
-        long nextId = incidentRepository.count() + 1001;
-        String ticketNumber = "INC-" + nextId;
-
         // Run AI Prediction
         AiPredictionRequest aiReq = new AiPredictionRequest();
         aiReq.setTitle(request.getTitle());
@@ -50,7 +46,7 @@ public class IncidentService {
         Priority finalPri = request.getPriority() != null ? request.getPriority() : predictedPri;
 
         Incident incident = Incident.builder()
-                .ticketNumber(ticketNumber)
+                .ticketNumber("PENDING") // will be set after save using the generated ID
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .category(finalCat)
@@ -66,6 +62,10 @@ public class IncidentService {
                 .build();
 
         Incident saved = incidentRepository.save(incident);
+
+        // Assign a unique, collision-free ticket number based on the auto-generated database ID
+        saved.setTicketNumber("INC-" + (1000 + saved.getId()));
+        saved = incidentRepository.save(saved);
 
         // Record Initial Audit History
         recordHistory(saved, creator, null, Status.NEW, null, finalPri, "Incident created by employee");

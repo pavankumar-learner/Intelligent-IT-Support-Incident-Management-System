@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { getUsersApi, createUserApi, toggleUserStatusApi, getDashboardStatsApi } from '../services/api';
 import StatCard from '../components/StatCard';
-import { Users, UserPlus, Shield, CheckCircle, XCircle, Activity, Key, Search } from 'lucide-react';
+import { Users, UserPlus, Shield, CheckCircle, XCircle, Activity, Key, Search, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [feedback, setFeedback] = useState({ text: '', type: '' });
 
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [modalError, setModalError] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('Password123!');
@@ -19,6 +21,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchAdminData();
   }, []);
+
+  const showNotification = (text, type = 'success') => {
+    setFeedback({ text, type });
+    setTimeout(() => setFeedback({ text: '', type: '' }), 4000);
+  };
 
   const fetchAdminData = async () => {
     setLoading(true);
@@ -31,6 +38,7 @@ const AdminDashboard = () => {
       setStats(sRes.data);
     } catch (err) {
       console.error('Error loading admin dashboard:', err);
+      showNotification('Unable to fetch enterprise directory telemetry from server.', 'error');
     } finally {
       setLoading(false);
     }
@@ -39,23 +47,27 @@ const AdminDashboard = () => {
   const handleToggleStatus = async (userId) => {
     try {
       await toggleUserStatusApi(userId);
+      showNotification('User status updated successfully.');
       fetchAdminData();
     } catch (err) {
-      alert('Failed to update user status');
+      showNotification(err.response?.data?.message || 'Failed to update user status.', 'error');
     }
   };
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setModalError('');
     try {
       await createUserApi({ name, email, password, role, department });
       setShowCreateModal(false);
       setName('');
       setEmail('');
+      setPassword('Password123!');
+      showNotification(`User account created successfully for ${email}.`);
       fetchAdminData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to create user');
+      setModalError(err.response?.data?.message || 'Failed to create user account.');
     } finally {
       setSubmitting(false);
     }
@@ -76,6 +88,22 @@ const AdminDashboard = () => {
           <span>Provision New User</span>
         </button>
       </div>
+
+      {/* Notification banner */}
+      {feedback.text && (
+        <div className={`p-4 rounded-xl text-sm flex items-center space-x-2 border ${
+          feedback.type === 'error'
+            ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+            : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+        }`}>
+          {feedback.type === 'error' ? (
+            <AlertCircle className="w-5 h-5 shrink-0" />
+          ) : (
+            <CheckCircle2 className="w-5 h-5 shrink-0" />
+          )}
+          <span>{feedback.text}</span>
+        </div>
+      )}
 
       {/* Admin Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -155,6 +183,12 @@ const AdminDashboard = () => {
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4">
             <h3 className="text-lg font-bold text-white">Provision New User Account</h3>
+            {modalError && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{modalError}</span>
+              </div>
+            )}
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase">Full Name</label>

@@ -5,16 +5,25 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 
-# Java/Maven build output
+# Java / Maven build output
+backend/bin/
 backend/target/
+**/target/
+*.class
 
-# Node/Vite dependencies and build output
+# Node / Vite dependencies and build output
+node_modules/
 frontend/node_modules/
 frontend/dist/
 
-# Local environment and editor noise
+# Environment files
 .env
 .env.*
 !.env.example
+
+# IDE and editor settings
+.vscode/
 .DS_Store
+
+# Logs
 *.log

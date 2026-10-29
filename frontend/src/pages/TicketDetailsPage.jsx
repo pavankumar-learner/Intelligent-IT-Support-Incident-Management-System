@@ -12,6 +12,7 @@ const TicketDetailsPage = ({ incidentId, onBack }) => {
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
+  const [commentError, setCommentError] = useState('');
 
   useEffect(() => {
     if (incidentId) {
@@ -41,13 +42,14 @@ const TicketDetailsPage = ({ incidentId, onBack }) => {
     e.preventDefault();
     if (!newComment.trim()) return;
     setSubmittingComment(true);
+    setCommentError('');
     try {
       await addCommentApi(incidentId, newComment);
       setNewComment('');
       const comRes = await getCommentsApi(incidentId);
       setComments(comRes.data);
     } catch (err) {
-      alert('Failed to add comment');
+      setCommentError(err.response?.data?.message || 'Failed to post comment. Please try again.');
     } finally {
       setSubmittingComment(false);
     }
@@ -217,6 +219,9 @@ const TicketDetailsPage = ({ incidentId, onBack }) => {
 
           {/* Add Comment Form */}
           <form onSubmit={handleAddComment} className="pt-4 border-t border-slate-800 space-y-2">
+            {commentError && (
+              <p className="text-xs text-rose-400 font-medium">{commentError}</p>
+            )}
             <div className="relative">
               <input
                 type="text"

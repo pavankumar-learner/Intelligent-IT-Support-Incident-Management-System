@@ -160,9 +160,9 @@ const CreateIncidentPage = () => {
               type="button"
               onClick={handleAiAutoPredict}
               disabled={aiLoading}
-              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1 rounded-lg border border-indigo-500/30 transition"
+              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1 rounded-lg border border-indigo-500/30 transition disabled:opacity-60"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-spin" />
+              <Sparkles className={`w-3.5 h-3.5 text-indigo-400 ${aiLoading ? 'animate-spin' : ''}`} />
               <span>{aiLoading ? 'Analyzing Text...' : 'AI Auto-Predict'}</span>
             </button>
           </div>

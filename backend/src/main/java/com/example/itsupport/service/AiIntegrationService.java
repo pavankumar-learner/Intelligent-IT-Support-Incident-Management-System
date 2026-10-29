@@ -23,7 +23,7 @@ public class AiIntegrationService {
     private String mlServiceUrl;
 
     private final IncidentRepository incidentRepository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     public AiPredictionResponse predictCategory(AiPredictionRequest request) {
         try {
@@ -81,7 +81,8 @@ public class AiIntegrationService {
     }
 
     public DuplicateCheckResponse checkDuplicate(DuplicateCheckRequest request) {
-        List<Incident> existingIncidents = incidentRepository.findAll();
+        // Query recent candidates (up to 100) to keep memory footprint bounded
+        List<Incident> existingIncidents = incidentRepository.findTop100ByOrderByCreatedAtDesc();
 
         List<Map<String, String>> candidateList = new ArrayList<>();
         for (Incident inc : existingIncidents) {

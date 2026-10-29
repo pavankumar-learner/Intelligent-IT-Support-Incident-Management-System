@@ -7,6 +7,7 @@ import com.example.itsupport.dto.UserDto;
 import com.example.itsupport.entity.Role;
 import com.example.itsupport.entity.User;
 import com.example.itsupport.exception.BadRequestException;
+import com.example.itsupport.exception.ResourceNotFoundException;
 import com.example.itsupport.repository.UserRepository;
 import com.example.itsupport.security.JwtTokenProvider;
 import com.example.itsupport.security.UserPrincipal;
@@ -55,7 +56,9 @@ public class AuthService {
             throw new BadRequestException("Email address is already registered!");
         }
 
-        Role userRole = request.getRole() != null ? request.getRole() : Role.ROLE_EMPLOYEE;
+        // Public self-registration always creates an EMPLOYEE account.
+        // Only the admin-protected POST /api/users endpoint can assign other roles.
+        Role userRole = Role.ROLE_EMPLOYEE;
 
         User user = User.builder()
                 .name(request.getName())
@@ -68,5 +71,11 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         return UserDto.fromEntity(savedUser);
+    }
+
+    public UserDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return UserDto.fromEntity(user);
     }
 }
